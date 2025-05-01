@@ -5,31 +5,29 @@ import cv2
 import pytesseract
 
 def login_and_capture():
-    # Configurar o Chrome para usar o perfil padrão (com login salvo)
+    # Configura o Chrome para usar o perfil padrão
     chrome_options = Options()
-    chrome_options.add_argument("--user-data-dir=/home/$USER/.config/google-chrome")
     chrome_options.add_argument("--profile-directory=Default")
+    chrome_options.add_argument("--start-maximized")
 
-    # Abrir o navegador
+    # Abre a sala de negociação
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://iqoption.com/traderoom")
-    
-    # Esperar a página carregar
-    time.sleep(8)
 
-    # Tirar o print da tela
-    screenshot_path = "static/screenshot.png"
-    driver.save_screenshot(screenshot_path)
+    # Espera a página carregar e tira o print
+    time.sleep(8)
+    driver.save_screenshot("static/screenshot.png")
     print("📸 Print tirado com sucesso.")
 
-    # Ler a imagem e extrair o texto (OCR)
-    imagem = cv2.imread(screenshot_path)
-    texto_extraido = pytesseract.image_to_string(imagem, lang='eng')
-    print("💰 Texto extraído do print:\n", texto_extraido)
+    # Lê o saldo da imagem
+    imagem = cv2.imread("static/screenshot.png")
+    texto = pytesseract.image_to_string(imagem, lang="eng")
+    print("💰 Texto extraído:", texto)
 
-    # Capturar URL da página aberta
+    # Mostra o nome da URL da página
     url_atual = driver.current_url
-    print(f"📄 Nome do arquivo/página aberta: {url_atual}")
+    print(f"📂 Página aberta: {url_atual}")
 
     driver.quit()
-    return screenshot_path
+    return "static/screenshot.png"
+
