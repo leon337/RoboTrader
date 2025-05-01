@@ -8,7 +8,6 @@ import time
 
 def login_and_capture():
     chrome_options = Options()
-    # chrome_options.add_argument("--headless")  # Descomente para rodar em segundo plano
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 
     driver = webdriver.Chrome(options=chrome_options)
@@ -16,26 +15,16 @@ def login_and_capture():
 
     wait = WebDriverWait(driver, 20)
 
-    # Primeiro tenta clicar com XPath
+    # Clica no botão "Entendi" se estiver presente
     try:
-        entendi_xpath = '//button[contains(text(), "Entendi")]'
-        entendi_btn = wait.until(EC.element_to_be_clickable((By.XPATH, entendi_xpath)))
-        entendi_btn.click()
-        print("✅ Botão 'Entendi' clicado com sucesso (via XPath).")
-    except:
-        # Se não conseguir, tenta por texto dentro de todos os botões
-        try:
-            print("⚠️ XPath falhou. Tentando localizar botão por texto...")
-            botoes = driver.find_elements(By.TAG_NAME, "button")
-            for btn in botoes:
-                if "Entendi" in btn.text:
-                    driver.execute_script("arguments[0].click();", btn)
-                    print("✅ Botão 'Entendi' clicado com sucesso (via texto).")
-                    break
-            else:
-                print("⚠️ Nenhum botão com texto 'Entendi' encontrado.")
-        except Exception as e:
-            print(f"❌ Erro ao procurar botão por texto: {e}")
+        entendi = wait.until(EC.element_to_be_clickable((
+            By.CSS_SELECTOR,
+            'div[data-test-id="notification-action-label"]'
+        )))
+        entendi.click()
+        print("✅ Botão 'Entendi' clicado com sucesso.")
+    except Exception as e:
+        print(f"⚠️ Botão 'Entendi' não encontrado ou já removido. {e}")
 
     try:
         email_input = wait.until(EC.presence_of_element_located((By.NAME, "email")))
