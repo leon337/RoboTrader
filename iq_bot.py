@@ -1,31 +1,35 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import pytesseract
-import cv2
 import time
+import cv2
+import pytesseract
 
 def login_and_capture():
+    # Configurar o Chrome para usar o perfil padrão (com login salvo)
     chrome_options = Options()
+    chrome_options.add_argument("--user-data-dir=/home/$USER/.config/google-chrome")
+    chrome_options.add_argument("--profile-directory=Default")
+
+    # Abrir o navegador
     driver = webdriver.Chrome(options=chrome_options)
-
     driver.get("https://iqoption.com/traderoom")
+    
+    # Esperar a página carregar
     time.sleep(8)
-    driver.save_screenshot("static/screenshot.png")
 
+    # Tirar o print da tela
+    screenshot_path = "static/screenshot.png"
+    driver.save_screenshot(screenshot_path)
     print("📸 Print tirado com sucesso.")
 
-    # Leitura do saldo com OCR
-    img = cv2.imread("static/screenshot.png")
-    text = pytesseract.image_to_string(img, lang="eng")
+    # Ler a imagem e extrair o texto (OCR)
+    imagem = cv2.imread(screenshot_path)
+    texto_extraido = pytesseract.image_to_string(imagem, lang='eng')
+    print("💰 Texto extraído do print:\n", texto_extraido)
 
-    print("💰 Texto detectado na imagem:")
-    print(text)
+    # Capturar URL da página aberta
+    url_atual = driver.current_url
+    print(f"📄 Nome do arquivo/página aberta: {url_atual}")
 
     driver.quit()
-    return "static/screenshot.png"
-
-if __name__ == '__main__':
-    login_and_capture()
+    return screenshot_path
