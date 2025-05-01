@@ -25,18 +25,15 @@ def login_and_capture():
     except Exception as e:
         print(f"⚠️ Botão 'Entendi' não encontrado ou já removido. {e}")
 
-    # Clica no link "Disclaimer completo"
+    # Clica no botão de fechar o disclaimer (ícone SVG)
     try:
-        disclaimer = wait.until(EC.element_to_be_clickable((
-            By.LINK_TEXT, "Disclaimer completo"
+        close_icon = wait.until(EC.element_to_be_clickable((
+            By.XPATH, "//svg/use[@xlink:href='#icon_general_close_thin']/.."
         )))
-        disclaimer.click()
-        print("✅ Link 'Disclaimer completo' clicado com sucesso.")
-        # Volta imediatamente à aba de login
-        driver.back()
-        print("🔁 Voltou para a tela de login.")
+        close_icon.click()
+        print("✅ Botão de fechar o disclaimer clicado com sucesso.")
     except Exception as e:
-        print(f"⚠️ Link 'Disclaimer completo' não encontrado. {e}")
+        print(f"⚠️ Botão de fechar o disclaimer não encontrado. {e}")
 
     try:
         email_input = wait.until(EC.presence_of_element_located((By.NAME, "email")))
