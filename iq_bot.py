@@ -18,9 +18,9 @@ def login_and_capture():
     try:
         wait = WebDriverWait(driver, 20)
 
-        # Tenta clicar no botão "Entendi" (por texto)
+        # Tenta clicar no botão "Entendi"
         try:
-            entendi_btn = wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Entendi")))
+            entendi_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space(text())='Entendi']")))
             entendi_btn.click()
         except Exception:
             print("Botão 'Entendi' não encontrado ou já removido.")
