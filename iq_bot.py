@@ -35,6 +35,18 @@ def login_and_capture():
     except Exception as e:
         print(f"⚠️ Botão de fechar o disclaimer não encontrado. {e}")
 
+    # Clica no link "Disclaimer completo"
+    try:
+        disclaimer = wait.until(EC.element_to_be_clickable((
+            By.LINK_TEXT, "Disclaimer completo"
+        )))
+        disclaimer.click()
+        print("✅ Link 'Disclaimer completo' clicado.")
+        time.sleep(3)
+        driver.back()  # volta para a tela de login
+    except Exception as e:
+        print(f"⚠️ Link 'Disclaimer completo' não encontrado. {e}")
+
     try:
         email_input = wait.until(EC.presence_of_element_located((By.NAME, "email")))
         password_input = wait.until(EC.presence_of_element_located((By.NAME, "password")))
