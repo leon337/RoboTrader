@@ -18,14 +18,14 @@ def login_and_capture():
     try:
         wait = WebDriverWait(driver, 20)
 
-        # Tenta clicar no botão "Entendi" do aviso de cookies
+        # Fecha o aviso de cookies se aparecer
         try:
-            entendi_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), \\"Entendi\\")]")))
+            entendi_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Entendi')]")))
             entendi_btn.click()
         except Exception:
             print("Aviso de cookies não encontrado ou já fechado.")
 
-        # Espera os campos de login
+        # Faz login
         email_input = wait.until(EC.presence_of_element_located((By.NAME, "email")))
         password_input = wait.until(EC.presence_of_element_located((By.NAME, "password")))
 
