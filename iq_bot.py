@@ -18,12 +18,16 @@ def login_and_capture():
     try:
         wait = WebDriverWait(driver, 20)
 
-        # Tenta clicar no botão "Entendi" via JavaScript
+        # Força clique em qualquer botão que tenha o texto "Entendi"
         try:
-            entendi_btn = wait.until(EC.presence_of_element_located((By.XPATH, "//button[contains(text(), 'Entendi')]")))
-            driver.execute_script("arguments[0].click();", entendi_btn)
+            botoes = driver.find_elements(By.TAG_NAME, "button")
+            for btn in botoes:
+                if "Entendi" in btn.text:
+                    driver.execute_script("arguments[0].click();", btn)
+                    print("✅ Botão 'Entendi' clicado com sucesso.")
+                    break
         except Exception:
-            print("Botão 'Entendi' não encontrado ou já removido.")
+            print("⚠️ Nenhum botão com texto 'Entendi' encontrado.")
 
         email_input = wait.until(EC.presence_of_element_located((By.NAME, "email")))
         password_input = wait.until(EC.presence_of_element_located((By.NAME, "password")))
