@@ -1,16 +1,36 @@
-from flask import Flask, render_template, send_file
-from iq_bot import login_and_capture
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+import time
+import cv2
+import pytesseract
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 @app.route("/")
-def home():
-    screenshot_path = login_and_capture()
-    return render_template("index.html", screenshot="screenshot.png")
+def login_and_capture():
+    chrome_options = Options()
+    chrome_options.add_argument("--user-data-dir=/home/sophia/.config/google-chrome")
+    chrome_options.add_argument("--profile-directory=Default")
 
-@app.route("/screenshot.png")
-def screenshot():
-    return send_file("static/screenshot.png", mimetype="image/png")
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.get("https://iqoption.com/traderoom")
+
+    # Espera para a página carregar
+    time.sleep(8)
+
+    # Tira print da tela
+    driver.save_screenshot("static/screenshot.png")
+    print("📸 Print tirado com sucesso.")
+
+    # Captura e processa o saldo com OCR
+    imagem = cv2.imread("static/screenshot.png")
+    imagem_cinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
+    saldo_extraido = pytesseract.image_to_string(imagem_cinza)
+
+    driver.quit()
+
+    return render_template("index.html", screenshot="static/screenshot.png", saldo=saldo_extraido)
 
 if __name__ == "__main__":
     app.run(debug=True)
