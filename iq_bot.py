@@ -15,16 +15,28 @@ def login_and_capture():
 
     wait = WebDriverWait(driver, 20)
 
-    # Clica no botão "Entendi" se estiver presente
+    # Clica no botão "Entendi"
     try:
         entendi = wait.until(EC.element_to_be_clickable((
-            By.CSS_SELECTOR,
-            'div[data-test-id="notification-action-label"]'
+            By.CSS_SELECTOR, 'div[data-test-id="notification-action-label"]'
         )))
         entendi.click()
         print("✅ Botão 'Entendi' clicado com sucesso.")
     except Exception as e:
         print(f"⚠️ Botão 'Entendi' não encontrado ou já removido. {e}")
+
+    # Clica no link "Disclaimer completo"
+    try:
+        disclaimer = wait.until(EC.element_to_be_clickable((
+            By.LINK_TEXT, "Disclaimer completo"
+        )))
+        disclaimer.click()
+        print("✅ Link 'Disclaimer completo' clicado com sucesso.")
+        # Volta imediatamente à aba de login
+        driver.back()
+        print("🔁 Voltou para a tela de login.")
+    except Exception as e:
+        print(f"⚠️ Link 'Disclaimer completo' não encontrado. {e}")
 
     try:
         email_input = wait.until(EC.presence_of_element_located((By.NAME, "email")))
