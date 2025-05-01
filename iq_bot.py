@@ -1,3 +1,8 @@
+from dotenv import load_dotenv
+import os
+load_dotenv()
+email = os.getenv("IQ_EMAIL")
+senha = os.getenv("IQ_PASSWORD")
 load_dotenv()
 from dotenv import load_dotenv
 import os
